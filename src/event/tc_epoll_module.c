@@ -170,7 +170,7 @@ int tc_epoll_polling(tc_event_loop_t *loop, long to)
 {
     int                         i, ret;
     tc_event_t                **evs;
-    struct timeval              timeout;
+    long                        timeout;
     tc_select_multiplex_io_t   *io;
     struct epoll_event         *events;
 
@@ -178,8 +178,7 @@ int tc_epoll_polling(tc_event_loop_t *loop, long to)
     evs = io->evs;
     events = io->events;
 
-    timeout.tv_sec = (long) (to / 1000);
-    timeout.tv_usec = (long) ((to % 1000) * 1000);
+    timeout = to;
 
     //ret = select(io->max_fd + 1, &cur_read_set, &cur_write_set, NULL,
     //             &timeout);
@@ -196,7 +195,7 @@ int tc_epoll_polling(tc_event_loop_t *loop, long to)
         return TC_EVENT_AGAIN;
     }
 
-    //for (i = 0; i < io->last; i++) {
+    for (i = 0; i < ret; i++) {
     //    /* clear the active events, and reset */
     //    evs[i]->events = TC_EVENT_NONE;
 
@@ -211,7 +210,7 @@ int tc_epoll_polling(tc_event_loop_t *loop, long to)
     //            tc_event_push_active_event(loop->active_events, evs[i]);
     //        }
     //    }
-    //}
+    }
 
     return TC_EVENT_OK;
 }
