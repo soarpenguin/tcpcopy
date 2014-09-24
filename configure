@@ -35,9 +35,9 @@ case "$TC_PLATFORM" in
 
     Linux:*)
     . auto/os/linux
-    ;;  
+    ;;
 
-    *) 
+    *)
     echo "error: Linux only!"
     exit 1
 esac
@@ -46,7 +46,7 @@ esac
 if [ $TC_DEBUG = YES ]; then
     have=TC_DEBUG . auto/have
     have=TC_DETECT_MEMORY . auto/have
-else 
+else
     if [ $TC_DETECT_MEMORY = YES ]; then
         have=TC_DETECT_MEMORY . auto/have
     fi
@@ -78,7 +78,7 @@ if [ $TC_PCAP_NEEDED = YES ]; then
         CORE_LIBS="$CORE_LIBS $TC_PF_RING_DIR/userland/lib/libpfring.a"
         CORE_LIBS="$CORE_LIBS -lpthread -lnuma"
     else
-        CORE_LIBS="$CORE_LIBS -lpcap" 
+        CORE_LIBS="$CORE_LIBS -lpcap"
     fi
 fi
 
@@ -115,7 +115,7 @@ fi
 
 if [ $TC_DIGEST = YES ]; then
     have=TC_DIGEST . auto/have
-    CORE_LIBS="$CORE_LIBS -lcrypto -lm" 
+    CORE_LIBS="$CORE_LIBS -lcrypto -lm"
 fi
 
 case ".$TC_PREFIX" in

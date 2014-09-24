@@ -40,11 +40,11 @@ esac
 
 case ".$TC_ERROR_LOG_PATH" in
     ./* | .)
-    ;;  
+    ;;
 
-    *)  
+    *)
         TC_ERROR_LOG_PATH=$TC_PREFIX/$TC_ERROR_LOG_PATH
-    ;;  
+    ;;
 esac
 
 cat << END                                                    >> $TC_MAKEFILE
@@ -74,12 +74,18 @@ END
 
 if test -n "$TC_ERROR_LOG_PATH"; then
     cat << END                                                >> $TC_MAKEFILE
-
 	test -d '\$(DESTDIR)`dirname "$TC_ERROR_LOG_PATH"`' || \
 		mkdir -p '\$(DESTDIR)`dirname "$TC_ERROR_LOG_PATH"`'
 END
 
 fi
+
+cat << END                                                    >> $TC_MAKEFILE
+
+uninstall:
+	test -d '\$(DESTDIR)$TC_PREFIX' && rm -rf '\$(DESTDIR)$TC_PREFIX'
+
+END
 
 
 # create Makefile
@@ -91,5 +97,8 @@ build:
 
 install:
 	\$(MAKE) -f $TC_MAKEFILE install
+
+uninstall:
+	\$(MAKE) -f $TC_MAKEFILE uninstall
 END
 
