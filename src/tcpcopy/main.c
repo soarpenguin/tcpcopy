@@ -117,7 +117,7 @@ usage(void)
     printf("-U <num>       set user session pool size in kilobytes(default 1).\n"
            "               The maximum value allowed is 63.\n");
     printf("-C <num>       parallel connections between tcpcopy and intercept.\n"
-           "               The maximum value allowed is 16(default 2 connections).\n");
+           "               The maximum value allowed is 11(default 2 connections).\n");
     printf("-s <server,>   intercept server list\n"
            "               Format:\n"
            "               ip_addr1:port1, ip_addr2:port2, ...\n");
@@ -401,6 +401,9 @@ output_for_debug()
 #endif
 #if (TC_PAYLOAD)
     tc_log_info(LOG_NOTICE, 0, "TC_PAYLOAD is true");
+#endif
+#if (TC_HAVE_EPOLL)
+    tc_log_info(LOG_NOTICE, 0, "epoll mode");
 #endif
 #if (TC_HAVE_PF_RING)
     tc_log_info(LOG_NOTICE, 0, "TC_HAVE_PF_RING is true");

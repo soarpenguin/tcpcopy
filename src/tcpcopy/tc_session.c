@@ -1581,8 +1581,13 @@ tc_proc_outgress(unsigned char *pack)
                     sess_post_disp(s, false);
                 }
             } else {
-                if (!tcp->rst) {
-                    send_faked_rst(s, ip, tcp);
+                if (!s->sm.last_ack) {
+                    s->sm.last_ack = 1;
+                    tc_log_debug1(LOG_INFO, 0, "last ack:%u", ntohs(s->src_port));
+                } else {
+                    if (!tcp->rst) {
+                        send_faked_rst(s, ip, tcp);
+                    }
                 }
             }
         } else {
@@ -1703,6 +1708,9 @@ proc_clt_fin(tc_sess_t *s, tc_iph_t *ip, tc_tcph_t *tcp)
             } else {
                 if (s->rep_ack_seq == s->cur_pack.seq) {
                     send_pack(s, ip, tcp, true);
+                    if (s->sm.dst_closed) {
+                        s->sm.sess_over = 1;
+                    }
                     return PACK_SLIDE;
                 }
             }
@@ -1892,10 +1900,6 @@ proc_clt_after_filter(tc_sess_t *s, tc_iph_t *ip, tc_tcph_t *tcp)
 
 /*
  * processing client packets
- * TODO 
- * 1)TCP Keepalive feature needs to be checked
- * 2)TCP is always allowed to send 1 byte of data 
- *   beyond the end of a closed window which confuses TCPCopy.
  * 
  */
 static int
